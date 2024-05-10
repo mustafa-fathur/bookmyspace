@@ -22,7 +22,6 @@ const createSendToken = (user, statusCode, res) => {
 
     res.status(statusCode).json({
         status: 'Success',
-        token,
         data: {
             user
         }
@@ -76,4 +75,40 @@ exports.loginUser = async (req, res) => {
 
     createSendToken(userData, 200, res)
 
+
 }
+
+exports.logoutUser = async (req, res) => {
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expires: new Date(0)
+    })
+
+    res.status(200).json({
+        message: 'Berhasil logout'
+    })
+}
+
+exports.getCurrentUser = async (req, res) => {
+    const currentUser = await User.findByPk(req.user.id)
+
+    if (currentUser) {
+        return res.status(200).json({
+            id: currentUser.id,
+            nama: currentUser.nama,
+            username: currentUser.username,
+            roleId: currentUser.roleId
+        })
+    }
+
+    return res.status(404).json({
+        message: 'User not found'
+    })
+}
+
+exports.login = (req, res) => {
+    if (req.method === 'GET') {
+        // Render the login view
+        res.render('login');
+    }
+};

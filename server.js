@@ -1,14 +1,20 @@
-const express = require('express')
-const app = express()
-const cors = require('cors')
-const morgan = require('morgan')
-const AuthRouter = require('./routes/AuthRouter')
-const AdminRouter = require('./routes/AdminRouter')
-const dotenv = require('dotenv')
-dotenv.config()
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const morgan = require('morgan');
+const AuthRouter = require('./routes/AuthRouter');
+const AdminRouter = require('./routes/AdminRouter');
+const dotenv = require('dotenv');
+const cookieParse = require('cookie-parser');
+dotenv.config();
+
+//Views
+app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'views'));
 
 //Middleware
 app.use(express.json())
+app.use(cookieParse())
 app.use(morgan("dev"))
 app.use(cors())
 
@@ -18,7 +24,7 @@ app.use('/ruangpinjam/auth', AuthRouter)
 
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.render('index')
 })
 
 //Server
