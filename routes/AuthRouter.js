@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { tambahUser, loginUser, logoutUser, getCurrentUser, login } = require('../controllers/AuthController');
+const { tambahUser, loginUser, logoutUser, getCurrentUser, loginForm } = require('../controllers/AuthController');
 const { authMiddleware } = require('../middleware/UserMiddleware')
 
-router.get('/login', login)
+router.get('/loginForm', loginForm)
 router.post('/tambahUser', tambahUser)
 router.post('/login', loginUser)
-router.post('/logout', authMiddleware, logoutUser)
+router.post('/logout', logoutUser)
 router.get('/currentUser', authMiddleware, getCurrentUser)
 
 
