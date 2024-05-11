@@ -13,10 +13,14 @@ dotenv.config();
 
 //Views
 // Set up views directory
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/views'));
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
+
+app.use(express.static(path.join(__dirname, "/node_modules/preline/dist")))
+app.use(express.static(path.join(__dirname, "public")))
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

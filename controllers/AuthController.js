@@ -144,6 +144,3 @@ exports.getCurrentUser = async (req, res) => {
     })
 }
 
-exports.loginForm = (req, res) => {
-    return res.render('login');
-};
