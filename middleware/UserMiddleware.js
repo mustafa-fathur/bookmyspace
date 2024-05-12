@@ -1,15 +1,12 @@
 const jwt = require('jsonwebtoken');
 const { User, Role } = require('../models');
 
-exports.authMiddleware = async (req, res, next) => {
-    //authorization
-    let token;
-    // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    //     token = req.headers.authorization.split(" ")[1]
-    // }
+const authMiddleware = async (req, res, next) => {
 
-    token = req.cookies.jwt
+    // Get token
+    const token = req.cookies.jwt
 
+    // Check token
     if (!token) {
         return next(res.status(401).json({
             status: 401,
@@ -17,7 +14,7 @@ exports.authMiddleware = async (req, res, next) => {
         }))
     }
 
-    //decoded token
+    // Decoded token
     let decoded;
     try {
         decoded = await jwt.verify(token, process.env.JWT_SECRET);
@@ -28,7 +25,7 @@ exports.authMiddleware = async (req, res, next) => {
         }))
     }
 
-    //ambil data user jika kondisi decoded
+    // Get user data berdasarkan id dalam token
     const currentUser = await User.findByPk(decoded.id)
     if (!currentUser) {
         return next(res.status(401).json({
@@ -43,14 +40,56 @@ exports.authMiddleware = async (req, res, next) => {
     next()
 }
 
-exports.isLogin
+const isLogin = async (req, res, next) => {
 
-exports.permissionUser = (...roles) => {
+    // Get token
+    const token = req.cookies.jwt
+
+    // Token = kosong, next route
+    try {
+        if (!token) {
+            return next()
+        }
+
+
+        // Decode jwt token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Get user by id dalam token
+        const currentUser = await User.findByPk(decoded.id);
+
+        // User = kosong, next route
+        if (!currentUser) {
+            return next()
+        }
+
+        // User = sudah login, simpan id role
+        const adminRoleId = await Role.findOne({ where: { role: 'admin' } }).then(role => role.id);
+        const userRoleId = await Role.findOne({ where: { role: 'user' } }).then(role => role.id);
+
+        // Redirect URL by role
+        if (currentUser.roleId === adminRoleId) {
+            return res.redirect('/admin/dashboard');
+        } else if (currentUser.roleId === userRoleId) {
+            return res.redirect('/user/dashboard');
+        }
+    } catch (error) {
+        // Error token verif, next
+        console.error(error);
+        return next();
+    }
+
+}
+
+const permissionUser = (...roles) => {
     return async (req, res, next) => {
+
+        // Get user role
         const rolesData = await Role.findByPk(req.user.roleId)
 
         const roleName = rolesData.role
 
+        // Check izin akses
         if (!roles.includes(roleName)) {
             return next(res.status(403).json({
                 status: 403,
@@ -62,4 +101,10 @@ exports.permissionUser = (...roles) => {
     }
 }
 
+module.exports = {
+    authMiddleware,
+    isLogin,
+    permissionUser
+
+}
 

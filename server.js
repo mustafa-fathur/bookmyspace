@@ -9,6 +9,7 @@ const UserRouter = require('./routes/UserRouter');
 const dotenv = require('dotenv');
 const cookieParse = require('cookie-parser');
 const path = require('path');
+const { isLogin } = require('./middleware/UserMiddleware')
 dotenv.config();
 
 //Views
@@ -42,7 +43,7 @@ app.use('/user', UserRouter)
 app.use('/auth', AuthRouter)
 
 
-app.get('/', (req, res) => {
+app.get('/', isLogin, (req, res) => {
     res.render('index')
 })
 
