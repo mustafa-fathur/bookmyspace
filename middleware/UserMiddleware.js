@@ -36,12 +36,14 @@ exports.authMiddleware = async (req, res, next) => {
             message: "User sudah terhapus, token sudah tidak bisa digunakan"
         }))
     }
-    // console.log(currentUser)
+    console.log(currentUser)
 
     req.user = currentUser;
 
     next()
 }
+
+exports.isLogin
 
 exports.permissionUser = (...roles) => {
     return async (req, res, next) => {
@@ -59,3 +61,5 @@ exports.permissionUser = (...roles) => {
         next()
     }
 }
+
+

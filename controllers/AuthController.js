@@ -20,6 +20,8 @@ const createSendToken = (user, statusCode, res) => {
 
     user.password = undefined
 
+
+
     res.status(statusCode).json({
         status: 'Success',
         data: {
@@ -57,7 +59,6 @@ exports.tambahUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
 
     try {
-
         // Validasi
         if (!req.body.username || !req.body.password) {
             return res.status(400).json({
@@ -66,7 +67,6 @@ exports.loginUser = async (req, res) => {
                 error: 'Please input username and password'
             })
         }
-
         // username & password benar
         const userData = await User.findOne({ where: { username: req.body.username } })
 
@@ -77,14 +77,14 @@ exports.loginUser = async (req, res) => {
                 error: 'Invalid Username or Password'
             })
         }
-
         // token res setelah login
-        // createSendToken(userData, 200, res);
-
         // Generate JWT token
-        const token = signToken(userData.id);
+
+        // createSendToken(userData, 200);
 
         // Set token in cookie
+        const token = signToken(userData.id, userData.role);
+
         const cookieOption = {
             expire: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
             httpOnly: true

@@ -10,7 +10,7 @@ const { authMiddleware, permissionUser } = require('../middleware/UserMiddleware
 //     res.render('dosen/dashboard')
 // })
 
-router.get('/', getAllUsers)
+router.get('/', authMiddleware, permissionUser("admin"), getAllUsers)
 
 router.get('/dashboard', authMiddleware, permissionUser("admin"), (req, res, next) => {
     // Render admin dashboard view
