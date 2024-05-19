@@ -1,5 +1,6 @@
 const { User, Role } = require('../models');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const loginForm = (req, res) => {
     res.render('login')
@@ -12,7 +13,6 @@ const signToken = id => {
 }
 
 const loginUser = async (req, res) => {
-
     try {
         // Validasi username dan password
         if (!req.body.username || !req.body.password) {
@@ -81,10 +81,13 @@ const logoutUser = async (req, res) => {
     })
 }
 
+
+
+
+
+
 module.exports = {
     loginForm,
     loginUser,
-    logoutUser
+    logoutUser,
 }
-
-
