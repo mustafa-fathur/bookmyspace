@@ -75,6 +75,10 @@ const ubahPassword = async (req, res) => {
         });
     }
 }
+const profile = (req, res, next) => {
+    // Render user dashboard view
+    res.render('user/profile');
+}
 
 module.exports = {
     dashboard,
