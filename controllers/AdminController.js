@@ -13,6 +13,3 @@ const dashboard = async (req, res, next) => {
 module.exports = {
     dashboard
 }
-
-
-
