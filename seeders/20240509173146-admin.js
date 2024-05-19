@@ -17,7 +17,6 @@ module.exports = {
       password: bcrypt.hashSync('12345678', salt),
       roleId: adminId,
     }], {});
-
   },
 
   async down(queryInterface, Sequelize) {

@@ -1,4 +1,5 @@
-node_modules/
+/node_modules
 .env
-public/css
-src/images
+/public/css
+/src/images
+/views/login2.ejs

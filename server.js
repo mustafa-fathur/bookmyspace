@@ -41,7 +41,9 @@ app.use(cors())
 app.use('/admin', AdminRouter)
 app.use('/user', UserRouter)
 app.use('/auth', AuthRouter)
-
+app.get('/login', (req, res) => {
+    res.render('login2')
+})
 
 app.get('/', isLogin, (req, res) => {
     res.render('index')
