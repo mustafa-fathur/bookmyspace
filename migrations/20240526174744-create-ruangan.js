@@ -2,42 +2,37 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
-      idUser: {
+    await queryInterface.createTable('Ruangans', {
+      idRuangan: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4
       },
-      idRole: {
-        type: Sequelize.UUID,
-        references: {
-          model: "Roles",
-          key: "idRole"
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      },
-      nama: {
+      namaRuangan: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      username: {
-        type: Sequelize.STRING,
-        unique: true,
-        allowNull: false
-      },
-      password: {
+      lokasi: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      noHp: {
+      kapasitas: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      gender: {
+      fasilitas: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      foto: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      statusKetersediaan: {
+        type: Sequelize.ENUM('Tersedia', 'Dipinjam'),
+        allowNull: false,
+        defaultValue: 'Tersedia'
       },
       createdAt: {
         allowNull: false,
@@ -50,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Ruangans');
   }
 };

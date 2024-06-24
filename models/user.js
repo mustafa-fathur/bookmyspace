@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const role = require('./role');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -12,14 +12,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.belongsTo(models.Role, { foreignKey: 'idRole' });
+      User.hasMany(models.Notifikasi, { foreignKey: 'idUser' });
+      User.hasMany(models.Peminjaman, { as: 'peminjam', foreignKey: 'idPeminjam' });
+      User.hasMany(models.Peminjaman, { as: 'admin', foreignKey: 'idAdmin' });
     }
   }
   User.init({
-    id: {
+    idUser: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+    },
+    idRole: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
     nama: {
       type: DataTypes.STRING,
@@ -34,8 +41,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    roleId: {
-      type: DataTypes.UUID
+    noHp: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    gender: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {
     hooks: {

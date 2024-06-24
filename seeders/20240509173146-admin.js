@@ -7,15 +7,17 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const salt = await bcrypt.genSaltSync(10)
     const adminId = await queryInterface.rawSelect('roles', {
-      where: { role: 'admin' }
-    }, ['id']);
+      where: { namaRole: 'admin' }
+    }, ['idRole']);
 
     await queryInterface.bulkInsert('users', [{
-      id: v4(),
+      idUser: v4(),
       nama: 'admin',
       username: 'admin',
-      password: bcrypt.hashSync('12345678', salt),
-      roleId: adminId,
+      password: bcrypt.hashSync('bukanadmin', salt),
+      noHp: 'None',
+      gender: 'None',
+      idRole: adminId,
     }], {});
   },
 
