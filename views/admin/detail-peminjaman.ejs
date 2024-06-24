@@ -1,0 +1,92 @@
+<%- include("header.ejs")%> 
+<%- include("sidebar.ejs")%>
+<div class="w-full lg:ps-64">
+  <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"></div>
+    <div class="flex flex-col">
+      <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1.5 min-w-full inline-block align-middle">
+          <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+            <!-- Header -->
+            <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200">
+              <div>
+                <h2 class="text-xl font-semibold text-gray-800">
+                  Detail Peminjaman
+                </h2>
+                <p class="text-sm text-gray-600">Detail Dari Setiap Peminjaman.</p>
+              </div>
+            </div>
+
+              <div class="mt-4 mx-12 flex flex-col justify-center items-center">
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg p mt-4 mb-4 w-full">
+                <h1 class="mx-4 text-2xl font-bold text-gray-800 mb-2">
+                        Data Peminjam
+                </h1>
+                  <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                    Nama: <%= peminjaman.peminjam.nama %>
+                  </p>
+                  <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                    NIM/NIP: <%= peminjaman.peminjam.username %>
+                  </p>
+                  <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                    No HP: <%= peminjaman.peminjam.noHp %>
+                  </p>
+                  <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                    Jenis Kelamin: <%= peminjaman.peminjam.gender %>
+                  </p>
+                </div>
+
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg p mt-4 mb-4 w-full">
+                    <h1 class="mx-4 text-2xl font-bold text-gray-800 mb-2">
+                        Data Peminjaman
+                    </h1>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                        Ruangan: <%= peminjaman.detailPeminjaman[0].ruangan.namaRuangan %>
+                      </p>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                      Kegiatan: <%= peminjaman.kegiatan %>
+                    </p>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                      Tanggal Pengajuan:  <%= new Date(peminjaman.tanggalPengajuan).toLocaleDateString() %>
+                    </p>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                      Tanggal Pemakaian:  <%= new Date(peminjaman.detailPeminjaman[0].tanggal).toLocaleDateString() %>
+                    </p>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                        Jam Mulai: <%= peminjaman.detailPeminjaman[0].jamMulai %>
+                    </p>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                        Jam Mulai: <%= peminjaman.detailPeminjaman[0].jamSelesai %>
+                    </p>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                      Status Pengajuan: <%= peminjaman.statusPengajuan %>
+                    </p>
+                    <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                      Formulir Peminjaman: <a class="text-blue-600" href="/uploads/formulir/<%= encodeURIComponent(peminjaman.formulir) %>" download="">Download Formulir</a>
+                    </p>
+
+                  </div>
+              </div>
+            <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+              <div>
+                <p class="text-sm text-gray-600">
+                  <span class="font-semibold text-gray-800">Id: <%= peminjaman.idPeminjaman %></span> 
+                </p>
+              </div>
+
+              <div>
+                <div class="inline-flex gap-x-2">
+                  <a href="/admin/daftar-peminjaman"
+                    class="py-2 px-8 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    Kembali
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("./footer.ejs")%>
