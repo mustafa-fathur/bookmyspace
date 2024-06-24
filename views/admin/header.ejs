@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="x-icon" href="/img/bookmyspace_logo.png">
+    <title>Admin</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>  
+<!-- ========== HEADER ========== -->
+<header class="sticky top-0 inset-x-0 flex flex-wrap sm:justify-start sm:flex-nowrap z-[48] w-full bg-white border-b text-sm py-2.5 sm:py-4 lg:ps-64">
+  <nav class="flex basis-full items-center w-full mx-auto px-4 sm:px-6" aria-label="Global">
+
+
+    <div class="w-full flex items-center justify-end ms-auto sm:justify-between sm:gap-x-3 sm:order-3">
+      <div class="sm:hidden">
+        <button type="button" class="w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
+          <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </div>
+        <h1 class="text-3xl text-blue-800 font-bold">BookMySpace</h1>
+      <div class="hidden sm:block">
+      </div>
+      <div class="flex flex-row items-center justify-end gap-2">
+        <div class="hs-dropdown [--placement:bottom-right] relative inline-flex">
+          <button id="hs-dropdown-with-header" type="button" class="w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
+            <img class="inline-block size-[38px] rounded-full ring-2 ring-white" 
+            src="<%= user.gender === 'Laki-laki' ? 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png' : (user.gender === 'Perempuan' ? 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png' : 'https://cdn3.iconfinder.com/data/icons/user-2/100/10-512.png') %>" 
+            alt="Image Description">         
+          </button>
+          <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg p-2" aria-labelledby="hs-dropdown-with-header">
+            <div class="py-3 px-5 -m-2 bg-gray-100 rounded-t-lg">
+              <p class="text-sm text-gray-500">Login sebagai</p>
+              <p class="text-sm font-medium text-gray-800"><%= user.nama %></p>
+            </div>
+            <div class="mt-2 py-2 first:pt-0 last:pb-0">
+              <form action="/auth/logout" method="post">
+              <button class="flex items-center w-full gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>                Log Out
+              </button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<!-- ========== END HEADER ========== -->
