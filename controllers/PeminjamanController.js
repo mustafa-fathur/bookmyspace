@@ -82,7 +82,27 @@ const pinjamRuangan = async (req, res, next) => {
     }
 };
 
+const batalPeminjaman = async (req, res, next) => {
+    const { idPeminjaman } = req.params;
+  
+    try {
+        const peminjaman = await Peminjaman.findOne({ where: { idPeminjaman } });
+  
+        if (!peminjaman) {
+            return res.status(404).json({ message: 'Peminjaman not found' });
+        }
+  
+        await peminjaman.destroy();
+  
+        return res.redirect('/user/data-peminjaman');
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error cancelling peminjaman');
+    }
+  };
+
 module.exports = {
     formPinjamRuangan,
-    pinjamRuangan
+    pinjamRuangan,
+    batalPeminjaman
 }
