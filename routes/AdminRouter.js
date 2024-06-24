@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../controllers/AuthController');
 const admin = require('../controllers/AdminController');
+const ruangan = require('../controllers/RuanganController');
 const { authMiddleware, permissionUser } = require('../middleware/UserMiddleware');
+const upload = require('../utils/UploadFileHandler');
 
 router.get('/dashboard', authMiddleware, permissionUser("admin"), admin.dashboard);
-router.post('/logout', auth.logoutUser);
+router.get('/tambah-ruangan', authMiddleware, permissionUser("admin"), admin.tambahRuanganForm);
+router.post('/tambah-ruangan', authMiddleware, permissionUser("admin"), upload.single('foto'), admin.tambahRuangan);
+router.get('/edit-ruangan/:idRuangan', authMiddleware, permissionUser("admin"), admin.editRuanganForm);
+router.post('/edit-ruangan/:idRuangan', authMiddleware, permissionUser("admin"), upload.single('foto'), admin.editRuangan);
+router.post('/hapus-ruangan/:idRuangan', authMiddleware, permissionUser("admin"), admin.hapusRuangan);
 
 module.exports = router;
