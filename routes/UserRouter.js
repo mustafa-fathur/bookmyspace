@@ -10,6 +10,7 @@ router.get('/dashboard', authMiddleware, permissionUser("user"), user.dashboard)
 router.get('/daftar-ruangan', authMiddleware, permissionUser("user"), ruangan.daftarRuangan);
 router.get('/cari-ruangan', authMiddleware, permissionUser("user"), ruangan.cariRuangan);
 router.get('/detail-ruangan/:id', authMiddleware, permissionUser("user"), ruangan.detailRuangan);
+router.get('/template-surat', authMiddleware, permissionUser("user"), ruangan.templateSurat);
 router.get('/pinjam-ruangan/:idRuangan', authMiddleware, permissionUser("user"), peminjaman.formPinjamRuangan);
 router.post('/pinjam-ruangan/:idRuangan', authMiddleware, permissionUser("user"), upload.single('formulir'), peminjaman.pinjamRuangan);
 router.post('/batal-peminjaman/:idPeminjaman', authMiddleware, permissionUser("user"), peminjaman.batalPeminjaman);
