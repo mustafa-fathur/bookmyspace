@@ -7,13 +7,21 @@ const ejs = require('ejs');``
 const pdf = require('html-pdf');
 const sequelize = require('sequelize');
 
+
 const dashboard = async (req, res, next) => {
-    const userId = req.user.id;
+    try {
+    
+    const message = req.cookies.message ? JSON.parse(req.cookies.message) : null;
 
-    const user = await User.findOne({ where: { id: userId } });
+    const userId = req.user.idUser;
 
-    // Render user dashboard view
-    res.render('user/dashboard', { user });
+    const user = await User.findOne({ where: { idUser: userId } });
+
+    res.render('user/dashboard', {  message, activePage: 'dashboard', user });
+
+    } catch (error) {
+        next(error);
+    }
 }
 
 const riwayat = async (req, res, next) => {
@@ -67,6 +75,7 @@ const riwayat = async (req, res, next) => {
     }
 };
 
+
 const downloadRiwayat = async (req, res, next) => {
     try {
         const userId = req.user.idUser;
@@ -108,77 +117,119 @@ const downloadRiwayat = async (req, res, next) => {
     }
 };
 
-
-
-const profile = async (req, res) => {
-    const userId = req.user.id;
-
-    const user = await User.findOne({ where: { id: userId } });
-
-    res.render('user/profile', { user });
-}
-
-const ubahPassword = async (req, res) => {
-    try {
-        // Get user ID from request
-        const userId = req.user.id;
-
-        console.log(req.body)
-
-        // Validasi password lama, password baru dan konfirmasi password
-        if (!req.body.password || !req.body.newPassword) {
-            return res.status(400).json({
-                status: 'Fail',
-                message: 'Error Validasi',
-                error: 'Please input password and new password'
-            })
-        }
-
-        // Menyimpan data user
-        const userData = await User.findOne({ where: { id: userId } })
-
-        // Validasi password
-        if (!userData || !(await bcrypt.compare(req.body.password, userData.password))) {
-            return res.status(400).json({
-                status: 'Failed',
-                message: 'Error Login',
-                error: 'Invalid Old Password'
-            })
-        }
-
-        // Validasi password baru
-        // if (req.body.newPassword !== req.body.confirmPassword) {
-        //     return res.status(400).json({
-        //         status: 'Failed',
-        //         message: 'Error Validasi',
-        //         error: 'Password baru dan konfirmasi password tidak sama'
-        //     })
-        // }
-
-        // Enkripsi password baru
-        const hashedPassword = await bcrypt.hash(req.body.newPassword, 12);
-
-        // Update password
-        await User.update({ password: hashedPassword }, { where: { id: userData.id } });
-
-        return res.status(200).json({
-            status: 'Success',
-            message: 'Berhasil mengubah password'
+const notifikasi = async (req, res, next) => {
+    try{
+        const user = req.user;
+        const notifications = await Notifikasi.findAll({
+            where: { idUser: req.user.idUser },
+            order: [['createdAt', 'DESC']],
         })
+        res.render('user/dashboard', { user, notifications });
 
     } catch (error) {
-        return res.status(500).json({
-            status: 'Error',
-            message: 'Internal Server Error',
-            error: error.message
-        });
+        next(error);
     }
 }
+
+const riwayatNotifikasi = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const notifications = await Notifikasi.findAll({
+            where: { idUser: req.user.idUser },
+            order: [['createdAt', 'DESC']],
+        })
+        res.render('user/notifikasi', { user, notifications });
+    } catch (error) {
+        next(error);
+    }
+}
+    
+const profile = async (req, res, next) => {
+    try {
+        let message = null;
+
+        if (req.cookies.message) {
+            try {
+                message = JSON.parse(req.cookies.message);
+            } catch (e) {
+                console.error('Error parsing message cookie:', e);
+            }
+            res.clearCookie('message');
+        }
+
+        const userId = req.user.idUser;
+        const user = await User.findOne({ where: { idUser: userId } });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        res.render('user/profile', { user, message });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const ubahPassword = async (req, res, next) => {
+    try {
+        const userId = req.user.idUser;
+
+        if (!req.body.password) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Password lama wajib diisi' }), { maxAge: 60000 });
+            return res.redirect('/user/profile');
+        }
+
+        if (!req.body.newPassword) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Password baru wajib diisi' }), { maxAge: 60000 });
+            return res.redirect('/user/profile');
+        }
+
+        if (req.body.newPassword.length < 8) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Password baru harus sama atau lebih dari 8 karakter' }), { maxAge: 60000 });
+            return res.redirect('/user/profile');
+        }
+
+        if (!/[A-Z]/.test(req.body.newPassword) ||
+            !/[a-z]/.test(req.body.newPassword) ||
+            !/[0-9]/.test(req.body.newPassword) ||
+            !/[\!\@\#\$\%\^\&\*\(\)\_\+]/.test(req.body.newPassword)) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Password baru harus memiliki huruf kecil, huruf besar, angka, dan karakter spesial' }), { maxAge: 60000 });
+            return res.redirect('/user/profile');
+        }
+
+        const userData = await User.findOne({ where: { idUser: userId } });
+
+        if (!userData || !(await bcrypt.compare(req.body.password, userData.password))) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Password lama tidak valid' }), { maxAge: 60000 });
+            return res.redirect('/user/profile');
+        }
+
+        if (await bcrypt.compare(req.body.newPassword, userData.password)) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Password baru harus berbeda dengan password lama' }), { maxAge: 60000 });
+            return res.redirect('/user/profile');
+        }
+
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, 12);
+
+        await User.update({ password: hashedPassword }, { where: { idUser: userId } });
+
+        res.cookie('message', JSON.stringify({ type: 'success', text: 'Berhasil mengubah password!', timeout: 3000 }), { maxAge: 3000 });
+
+        return res.redirect('/user/profile');
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.cookie('message', JSON.stringify({ type: 'error', text: 'Internal Server Error' }), { maxAge: 60000 });
+        return res.redirect('/user/profile');
+    }
+};
+
 
 module.exports = {
     dashboard,
     riwayat,
     downloadRiwayat,
+    notifikasi,
+    riwayatNotifikasi,
     profile,
-    ubahPassword
+    ubahPassword,
 }

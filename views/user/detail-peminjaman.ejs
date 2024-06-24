@@ -1,0 +1,57 @@
+<%- include("head.ejs")%>
+<div class="max-w-2xl mx-auto my-12" style="margin-top: 5rem; margin-bottom: 5rem;">
+        <div class="bg-white p-4 rounded-lg bg-white-700 relativ">
+            <div class="mb-2 flex justify-between items-center">
+                <div>
+                    <span class="block text-sm text-black ">Nama Peminjam:</span>
+                    <span class="block text-sm font-medium text-black"><%= peminjaman.peminjam.nama %></span>
+                </div>
+                <div class="mb-2 flex flex-col items-first">
+                    <span class="block text-sm text-black ">Status</span>   
+                    <div class="<%= peminjaman.statusPengajuan === 'Disetujui' ? 'bg-green-200' : peminjaman.statusPengajuan === 'Menunggu' ? 'bg-yellow-400' : 'bg-red-700' %> text-black px-3 py-1 rounded">
+                        <span class="text-sm font-medium"><%= peminjaman.statusPengajuan %></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <span class="block text-sm text-black ">Nama Ruangan:</span>
+                <span class="block text-sm font-medium text-black"><%= peminjaman.detailPeminjaman[0].ruangan.namaRuangan %></span>
+            </div>
+            <div class="mb-2">
+                <span class="block text-sm text-black ">Digunakan Mulai:</span>
+                <span class="block text-sm font-medium text-black"><%= new Date(peminjaman.detailPeminjaman[0].tanggal).toLocaleDateString() %>  <%= peminjaman.detailPeminjaman[0].jamMulai %></span>
+            </div>
+            <div class="mb-2">
+                <span class="block text-sm text-black ">Selesai Digunakan:</span>
+                <span class="block text-sm font-medium text-black"><%= new Date(peminjaman.detailPeminjaman[0].tanggal).toLocaleDateString() %> <%= peminjaman.detailPeminjaman[0].jamSelesai %> </span>
+            </div>
+            <div class="mb-2">
+                <span class="block text-sm text-black ">Deskripsi Kegiatan:</span>
+                <span class="block text-sm font-medium text-black"><%= peminjaman.kegiatan %></span>
+            </div>
+            <div class="mb-2">
+                <span class="block text-sm text-black ">Tanggal Pengajuan:</span>
+                <span class="block text-sm font-medium text-black"><%= new Date(peminjaman.tanggalPengajuan).toLocaleDateString() %></span>
+            </div>
+            <div class="mb-2 flex flex-col items-end">
+                <% if (peminjaman.statusPengajuan === 'Disetujui') { %>
+                    <span class="block text-sm text-black  mb-2">Download Surat Keterangan Peminjaman Ruangan</span>
+                    <form action="/user/download-surat/<%= peminjaman.idPeminjaman %>" method="get">
+                        <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m8-8l-8 8-8-8" />
+                            </svg>
+                            Unduh
+                        </button>
+                    </form>
+                <% } else { %>
+                    <form action="/user/riwayat">
+                        <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 flex items-center">
+                            Kembali
+                        </button>
+                    </form>
+                <% } %>
+            </div>
+        </div>
+</div>
+<%- include("footer.ejs")%>

@@ -3,29 +3,26 @@ const { User, Role } = require('../models');
 
 const authMiddleware = async (req, res, next) => {
 
-    // Get token
     const token = req.cookies.jwt
 
-    // Check token
     if (!token) {
-        return next(res.status(401).json({
-            status: 401,
+        return res.status(500).render('error', {
+            status: 500,
             message: 'Token tidak ditemukan, pastikan anda sudah login terlebih dahulu!'
-        }))
+        });
     }
 
-    // Decoded token
     let decoded;
     try {
         decoded = await jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
         return next(res.status(401).json({
+            status: 401,
             error: err,
             message: "Token yang dimasukkan tidak ditemukan"
         }))
     }
 
-    // Get user data berdasarkan id dalam token
     const currentUser = await User.findByPk(decoded.id)
     if (!currentUser) {
         return next(res.status(401).json({
@@ -42,39 +39,30 @@ const authMiddleware = async (req, res, next) => {
 
 const isLogin = async (req, res, next) => {
 
-    // Get token
     const token = req.cookies.jwt
 
-    // Token = kosong, next route
     try {
         if (!token) {
             return next()
         }
 
-
-        // Decode jwt token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Get user by id dalam token
         const currentUser = await User.findByPk(decoded.id);
 
-        // User = kosong, next route
         if (!currentUser) {
             return next()
         }
 
-        // User = sudah login, simpan id role
-        const adminRoleId = await Role.findOne({ where: { role: 'admin' } }).then(role => role.id);
-        const userRoleId = await Role.findOne({ where: { role: 'user' } }).then(role => role.id);
+        const adminRoleId = await Role.findOne({ where: { namaRole: 'admin' } }).then(role => role.idRole);
+        const userRoleId = await Role.findOne({ where: { namaRole: 'user' } }).then(role => role.idRole);
 
-        // Redirect URL by role
-        if (currentUser.roleId === adminRoleId) {
+        if (currentUser.idRole === adminRoleId) {
             return res.redirect('/admin/dashboard');
-        } else if (currentUser.roleId === userRoleId) {
+        } else if (currentUser.idRole === userRoleId) {
             return res.redirect('/user/dashboard');
         }
     } catch (error) {
-        // Error token verif, next
         console.error(error);
         return next();
     }
@@ -84,16 +72,14 @@ const isLogin = async (req, res, next) => {
 const permissionUser = (...roles) => {
     return async (req, res, next) => {
 
-        // Get user role
-        const rolesData = await Role.findByPk(req.user.roleId)
+        const rolesData = await Role.findByPk(req.user.idRole)
 
-        const roleName = rolesData.role
+        const roleName = rolesData.namaRole
 
-        // Check izin akses
         if (!roles.includes(roleName)) {
-            return next(res.status(403).json({
+            return next(res.status(500).render('error',{
                 status: 403,
-                error: "Anda tidak dapat mengakses halaman ini"
+                message: "Anda tidak dapat mengakses halaman ini"
             }))
         }
 
