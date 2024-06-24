@@ -105,7 +105,7 @@ const downloadRiwayat = async (req, res, next) => {
         const currentPage = 'riwayat';
         const html = await ejs.renderFile(templatePath, { currentPage, user, peminjamans });
     
-        const pdfPath = path.join(__dirname, '../public/downloads/riwayat/riwayat.pdf'); // Path tujuan penyimpanan PDF
+        const pdfPath = path.join(__dirname, '../public/downloads/riwayat/riwayat.pdf'); 
         pdf.create(html).toFile(pdfPath, (err, result) => {
           if (err) {
             return next(err);

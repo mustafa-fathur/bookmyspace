@@ -64,7 +64,7 @@ const tambahRuangan = async (req, res, next) => {
         return res.redirect('/admin/tambah-ruangan');
     }
 
-    if (foto.size > 2 * 1024 * 1024) { // 2 MB
+    if (foto.size > 2 * 1024 * 1024) { 
         res.cookie('flash', { type: 'error', message: 'Ukuran gambar maksimal 2MB' });
         return res.redirect('/admin/tambah-ruangan');
     }
