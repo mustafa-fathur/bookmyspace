@@ -1,0 +1,43 @@
+<%- include("head.ejs")%>
+<!-- Card Section -->
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto mt-4 bg-white">
+  <form action="/user/cari-ruangan" method="GET" class="mb-6">
+    <div class="relative">
+      <input type="text" name="search" placeholder="Cari Ruangan" value="<%= searchQuery %>" class="border p-2 w-full rounded pl-10">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+  </form>
+  <!-- Flexbox Container -->
+  <div class="flex flex-col gap-3 sm:gap-6">
+    <% ruangans.forEach((ruangan) => { %>
+    <!-- Card -->
+    <div
+      class="group flex flex-col bg-blue-800 border shadow-sm rounded-xl hover:shadow-md transition white:bg-neutral-900 dark:border-neutral-800"
+    >     
+     <div class="p-4 md:p-5">
+        <div class="flex justify-between items-center">
+          <h3 class="text-base text-white font-bold">
+            <%= ruangan.namaRuangan %>
+          </h3>
+          <!-- Buttons -->
+          <div class="flex space-x-2">
+            <a href="/user/detail-ruangan/<%= ruangan.idRuangan %>" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-blue-600 hover:bg-blue-600 hover:text-white disabled:opacity-50 disabled:pointer-events-none">
+              Detail
+            </a>
+            <a href="/user/pinjam-ruangan/<%= ruangan.idRuangan %>" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-blue-600 hover:bg-blue-600 hover:text-white disabled:opacity-50 disabled:pointer-events-none">
+              Pinjam
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Card -->
+    <% }); %>
+  </div>
+  <!-- End Flexbox Container -->
+</div>
+<!-- End Card Section -->
+</div>
+
+
+<%- include("footer.ejs")%>
