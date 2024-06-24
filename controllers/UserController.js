@@ -1,6 +1,11 @@
-const { User, Role } = require('../models');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const { User, Ruangan, Peminjaman, DetailPeminjaman, Notifikasi } = require('../models');
+const bcrypt = require('bcryptjs');
+const { Op, where } = require('sequelize');
+const moment = require('moment');
+const path = require('path');   
+const ejs = require('ejs');``
+const pdf = require('html-pdf');
+const sequelize = require('sequelize');
 
 const dashboard = async (req, res, next) => {
     const userId = req.user.id;
@@ -10,6 +15,100 @@ const dashboard = async (req, res, next) => {
     // Render user dashboard view
     res.render('user/dashboard', { user });
 }
+
+const riwayat = async (req, res, next) => {
+    try {
+        const userId = req.user.idUser;
+        const user = await User.findOne({ where: { idUser: userId } });
+        const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+        const peminjamans = await Peminjaman.findAll({
+            where: { 
+                idPeminjam: userId,
+                [Op.or]: [
+                    { statusPengajuan: 'Ditolak' },
+                    {
+                        statusPengajuan: 'Disetujui',
+                        '$detailPeminjaman.tanggal$': { [Op.lt]: currentDateTime.split(' ')[0] },
+                        [Op.and]: [
+                            sequelize.where(
+                                sequelize.fn('CONCAT', 
+                                    sequelize.col('detailPeminjaman.tanggal'), 
+                                    ' ', 
+                                    sequelize.col('detailPeminjaman.jamSelesai')
+                                ),
+                                { [Op.lt]: currentDateTime }
+                            )
+                        ]
+                    }
+                ]
+            },
+            attributes: ['idPeminjaman', 'kegiatan', 'tanggalPengajuan', 'formulir', 'statusPengajuan', 'tanggalKeputusan'],
+            include: [
+                {
+                    model: DetailPeminjaman,
+                    as: 'detailPeminjaman',
+                    attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+                    include: [
+                        {
+                            model: Ruangan,
+                            as: 'ruangan',
+                            attributes: ['namaRuangan'],
+                        },
+                    ],
+                },
+            ],
+        });
+
+        res.render('user/riwayat-peminjaman', { user, peminjamans });
+    } catch (error) {  
+        console.error('Error in riwayat:', error);
+        next(error);
+    }
+};
+
+const downloadRiwayat = async (req, res, next) => {
+    try {
+        const userId = req.user.idUser;
+
+        const user = await User.findOne({ where: { idUser: userId } });
+
+        const peminjamans = await Peminjaman.findAll({
+            where: { idPeminjam: userId },
+            attributes: ['idPeminjaman', 'kegiatan', 'tanggalPengajuan', 'formulir', 'statusPengajuan', 'tanggalKeputusan'],
+            include: [
+                {
+                    model: DetailPeminjaman,
+                    as: 'detailPeminjaman',
+                    attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+                    include: [
+                        {
+                            model: Ruangan,
+                            as: 'ruangan',
+                            attributes: ['namaRuangan'],
+                        },
+                    ],
+                },
+            ],
+        });
+
+        const templatePath = path.join(__dirname, '../views/user/template-riwayat.ejs');
+        const currentPage = 'riwayat';
+        const html = await ejs.renderFile(templatePath, { currentPage, user, peminjamans });
+    
+        const pdfPath = path.join(__dirname, '../public/downloads/riwayat/riwayat.pdf'); // Path tujuan penyimpanan PDF
+        pdf.create(html).toFile(pdfPath, (err, result) => {
+          if (err) {
+            return next(err);
+          }
+          res.download(result.filename);
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+
+
 
 const profile = async (req, res) => {
     const userId = req.user.id;
@@ -78,6 +177,8 @@ const ubahPassword = async (req, res) => {
 
 module.exports = {
     dashboard,
+    riwayat,
+    downloadRiwayat,
     profile,
     ubahPassword
 }
