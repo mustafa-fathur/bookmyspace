@@ -1,0 +1,105 @@
+<%- include("header.ejs")%> 
+<%- include("sidebar.ejs")%>
+<!-- Content -->
+<div class="w-full lg:ps-64">
+  <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
+    <!-- Grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"></div>
+    <!-- End Grid -->
+
+    <!-- Card -->
+    <div class="flex flex-col">
+      <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1.5 min-w-full inline-block align-middle">
+          <div
+            class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden"
+          >
+            <!-- Header -->
+            <div
+              class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200"
+            >
+              <div>
+                <h2 class="text-xl font-semibold text-gray-800">
+                  Detail Ruangan
+                </h2>
+                <p class="text-sm text-gray-600">Detail Dari Setiap Ruangan.</p>
+              </div>
+            </div>
+
+            <div id="detail-ruangan" class="mt-4 mx-64 flex flex-col justify-center items-center">
+              <img
+                class="object-cover w-52"
+                src="/uploads/ruangan/<%= ruangan.foto %>"
+                alt="Image Description"
+              />
+              <div class="bg-white shadow overflow-hidden sm:rounded-lg p mt-4 mb-4 w-full">
+
+              <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                Id: <%= ruangan.idRuangan %>
+              </p>
+            </div>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg p mb-4 w-full">
+
+              <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+                Nama: <%= ruangan.namaRuangan %>
+              </p>
+            </div>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg p mb-4 w-full">
+
+              <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+               Lokasi: <%= ruangan.lokasi %>
+              </p>
+            </div>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg p mb-4 w-full">
+
+              <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+               Kapasitas: <%= ruangan.kapasitas %>
+              </p>
+            </div>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg p mb-4 w-full">
+
+              <p class="mx-4 text-xl font-medium text-gray-800 mb-2">
+               Fasilitas:  <%= ruangan.fasilitas %>
+              </p>
+            </div>
+          </div>
+            
+            <!-- End Card -->
+
+            <!-- End Card Section -->
+
+            <!-- End Header -->
+
+            <!-- Footer -->
+            <div
+              class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200"
+            >
+              <div>
+                <p class="text-sm text-gray-600">
+                  <span class="font-semibold text-gray-800">12</span> results
+                </p>
+              </div>
+
+              <div>
+                <div class="inline-flex gap-x-2">
+                  <button
+                    type="button"
+                    class="py-2 px-8 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                    onclick="window.location.href='/admin/daftar-ruangan'"
+                  >
+                    Kembali
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- End Footer -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Card -->
+  </div>
+</div>
+<!-- End Content -->
+<!-- ========== END MAIN CONTENT ========== -->
+<%- include("./footer.ejs")%>
