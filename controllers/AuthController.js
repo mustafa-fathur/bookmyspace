@@ -1,9 +1,17 @@
 const { User, Role } = require('../models');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
 const loginForm = (req, res) => {
-    res.render('login')
+    let message = null;
+    if (req.cookies.message) {
+        try {
+            message = JSON.parse(req.cookies.message);
+        } catch (e) {
+            console.error('Error parsing message cookie:', e);
+        }
+        res.clearCookie('message');
+    }
+    res.render('login', { message });
 }
 
 const signToken = id => {
@@ -14,57 +22,46 @@ const signToken = id => {
 
 const loginUser = async (req, res) => {
     try {
-        // Validasi username dan password
-        if (!req.body.username || !req.body.password) {
-            return res.status(400).json({
-                status: 'Fail',
-                message: 'Error Validasi',
-                error: 'Please input username and password'
-            })
+        if (!req.body.username) {
+            res.cookie('message', JSON.stringify({type: 'error', text: 'Username wajib diisi'}), {maxAge: 60000});
+            return res.redirect('/auth/login');
+        } 
+        if (!req.body.password) {
+            res.cookie('message', JSON.stringify({type: 'error', text: 'Password wajib diisi'}), {maxAge: 60000});
+            return res.redirect('/auth/login');
         }
 
-        // Menyimpan data user
         const userData = await User.findOne({ where: { username: req.body.username } })
 
-        // Validasi password
         if (!userData || !(await userData.CorrectPassword(req.body.password, userData.password))) {
-            return res.status(400).json({
-                status: 'Failed',
-                message: 'Error Login',
-                error: 'Invalid Username or Password'
-            })
+            res.cookie('message', JSON.stringify({type: 'error', text: 'Username atau password salah'}), {maxAge: 60000});
+            return res.redirect('/auth/login');
         }
 
-        // Membuat token untuk user berdasarkan id dan role
-        const token = signToken(userData.id, userData.role);
-
-
-        // Membuat cookies
+        const token = signToken(userData.idUser, userData.namaRole);
+        
         const cookieOption = {
             expire: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
             httpOnly: true
-        };
+        };  
 
-        // Mengirim token 
         res.cookie('jwt', token, cookieOption);
 
-        // Menyimpan data role admin dan user berdasarkan id role
-        const adminRoleId = await Role.findOne({ where: { role: 'admin' } }).then(role => role.id);
-        const userRoleId = await Role.findOne({ where: { role: 'user' } }).then(role => role.id);
+        const adminRoleId = await Role.findOne({ where: { namaRole: 'admin' } }).then(namaRole => namaRole.idRole);
+        const userRoleId = await Role.findOne({ where: { namaRole: 'user' } }).then(namaRole => namaRole.idRole);
 
-        // Menentukan redirect URL berdasarkan role
-        if (userData.roleId === adminRoleId) {
+        res.cookie('message', JSON.stringify({type: 'success', text: 'Login berhasil!', timeout: 1000}), {maxAge: 3000})
+       
+        if (userData.idRole === adminRoleId) {
             return res.redirect('/admin/dashboard')
-        } else if (userData.roleId === userRoleId) {
+        } else if (userData.idRole === userRoleId) {
             return res.redirect('/user/dashboard')
         }
 
+
     } catch (error) {
-        return res.status(500).json({
-            status: 'Error',
-            message: 'Internal Server Error',
-            error: error.message
-        });
+        res.cookie('message', JSON.stringify({type: 'error', text: 'Internal Server Error'}), {maxAge: 60000});
+        return res.redirect('/auth/login');
     }
 
 }
@@ -80,11 +77,6 @@ const logoutUser = async (req, res) => {
         message: 'Berhasil logout'
     })
 }
-
-
-
-
-
 
 module.exports = {
     loginForm,
