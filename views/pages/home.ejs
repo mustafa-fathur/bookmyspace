@@ -1,0 +1,142 @@
+<%- include('../layouts/main', { body: `
+
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-white selection:bg-primary-100 selection:text-primary-900">
+  <!-- Glowing Background Orbs -->
+  <div class="absolute inset-x-0 top-0 h-[600px] w-full overflow-hidden blur-3xl opacity-30 -z-10" aria-hidden="true">
+    <div class="absolute -top-1/2 left-1/2 -ml-[30rem] w-[50rem] h-[50rem] rounded-full bg-gradient-to-tr from-primary-200 to-indigo-100 mix-blend-multiply opacity-50 animate-pulse transition-all duration-1000"></div>
+    <div class="absolute -top-1/2 right-1/4 -mt-[10rem] w-[40rem] h-[40rem] rounded-full bg-gradient-to-br from-blue-100 to-primary-300 mix-blend-multiply opacity-50"></div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 lg:pt-40 lg:pb-32">
+    <div class="flex flex-col items-center text-center">
+      <!-- Badge -->
+      <a href="#features" class="inline-flex items-center gap-2 rounded-full px-4 py-1.5 bg-primary-50/50 text-sm font-semibold text-primary-600 ring-1 ring-inset ring-primary-500/20 hover:bg-primary-50 hover:ring-primary-500/30 transition-all">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+        </span>
+        Premium Room Booking System
+      </a>
+
+      <!-- Headline -->
+      <h1 class="mt-8 max-w-4xl tracking-tight text-6xl sm:text-7xl lg:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-gray-900 via-gray-800 to-gray-500 leading-[1.1]">
+        Secure your space.<br />
+        <span class="block text-primary-600 drop-shadow-sm">Instantly.</span>
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="mt-8 max-w-2xl text-lg sm:text-xl leading-relaxed text-gray-500 font-medium">
+        Elevate your academic workflow. Real-time availability, conflict-free scheduling, and instant administrative approvals—all from a single, beautiful interface.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="mt-12 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        <a href="/register" class="group relative w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-gray-900 rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-gray-900/20 active:scale-95">
+          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
+          <span class="relative">Start Booking Today</span>
+          <svg class="relative ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+        <a href="/login" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-gray-700 bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:border-gray-300 transition-all hover:scale-105 active:scale-95 shadow-sm">
+          Sign In
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-20 pt-10 border-t border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
+        <div class="flex flex-col gap-y-2">
+          <dt class="text-sm leading-6 text-gray-500">Rooms managed</dt>
+          <dd class="order-first text-3xl font-bold tracking-tight text-gray-900">120+</dd>
+        </div>
+        <div class="flex flex-col gap-y-2">
+          <dt class="text-sm leading-6 text-gray-500">Active users</dt>
+          <dd class="order-first text-3xl font-bold tracking-tight text-gray-900">4,000+</dd>
+        </div>
+        <div class="flex flex-col gap-y-2">
+          <dt class="text-sm leading-6 text-gray-500">Bookings made</dt>
+          <dd class="order-first text-3xl font-bold tracking-tight text-gray-900">10k+</dd>
+        </div>
+        <div class="flex flex-col gap-y-2">
+          <dt class="text-sm leading-6 text-gray-500">Availability</dt>
+          <dd class="order-first text-3xl font-bold tracking-tight text-gray-900">24/7</dd>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Advanced Features Section (Glassmorphism & Gradients) -->
+<section id="features" class="relative py-24 sm:py-32 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mb-16">
+      <h2 class="text-sm font-semibold leading-7 text-primary-600 uppercase tracking-wider">Features</h2>
+      <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Everything you need to manage your campus spaces.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Card 1 -->
+      <div class="relative group rounded-3xl p-8 bg-white border border-gray-200 shadow-sm transition-all hover:shadow-xl hover:border-primary-100 hover:-translate-y-2 duration-300">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-50 to-transparent opacity-0 rounded-3xl transition-opacity group-hover:opacity-100"></div>
+        <div class="relative">
+          <div class="flex items-center justify-center h-14 w-14 rounded-2xl bg-gray-900 text-white mb-6 group-hover:bg-primary-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Conflict-Free Calendar</h3>
+          <p class="text-gray-500 leading-relaxed font-medium">Visual calendar grids automatically lock overlapping time slots so you never encounter double bookings.</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="relative group rounded-3xl p-8 bg-white border border-gray-200 shadow-sm transition-all hover:shadow-xl hover:border-blue-100 hover:-translate-y-2 duration-300">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 rounded-3xl transition-opacity group-hover:opacity-100"></div>
+        <div class="relative">
+          <div class="flex items-center justify-center h-14 w-14 rounded-2xl bg-gray-900 text-white mb-6 group-hover:bg-blue-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Letter Uploads</h3>
+          <p class="text-gray-500 leading-relaxed font-medium">Seamlessly attach PDF authorization files. Our secure storage isolates files ensuring privacy and safety.</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="relative group rounded-3xl p-8 bg-white border border-gray-200 shadow-sm transition-all hover:shadow-xl hover:border-emerald-100 hover:-translate-y-2 duration-300 md:translate-y-4">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent opacity-0 rounded-3xl transition-opacity group-hover:opacity-100"></div>
+        <div class="relative">
+          <div class="flex items-center justify-center h-14 w-14 rounded-2xl bg-gray-900 text-white mb-6 group-hover:bg-emerald-500 transition-colors">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Instant Notifications</h3>
+          <p class="text-gray-500 leading-relaxed font-medium">Administrators validate bookings in one click. Users receive immediate notifications without refreshing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Full-page Image & CTA Section -->
+<section class="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
+  <img src="https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&q=80&w=2000" alt="University Campus" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-20 filter grayscale blur-sm">
+  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>
+  
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+    <h2 class="text-4xl font-bold tracking-tight sm:text-5xl">Stop waiting. Start organizing.</h2>
+    <p class="mt-6 text-xl leading-8 text-gray-300">Join the thousands of students and faculty streamlining their events today.</p>
+    <div class="mt-10 flex justify-center">
+      <a href="/register" class="inline-flex items-center gap-2 rounded-full bg-primary-600 px-8 py-4 text-base font-semibold text-white hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/20 active:translate-y-0">
+        Create Your Free Account
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+` }) %>

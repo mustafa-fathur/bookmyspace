@@ -1,0 +1,25 @@
+<!-- Navbar -->
+<header class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors">
+      <img src="/images/logo.png" alt="BookMySpace Logo" class="h-8 w-auto object-contain">
+      BookMySpace
+    </a>
+
+    <!-- Navigation Links -->
+    <div class="flex items-center gap-3">
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Dashboard</a>
+        <a href="/logout" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+          Logout
+        </a>
+      <% } else { %>
+        <a href="/login" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Login</a>
+        <a href="/register" class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors shadow-sm">
+          Register
+        </a>
+      <% } %>
+    </div>
+  </nav>
+</header>
