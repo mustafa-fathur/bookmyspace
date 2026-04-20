@@ -27,15 +27,15 @@
 
             <div id="roomsDropdownMenu" class="hidden absolute left-0 lg:left-auto lg:translate-x-0 top-full mt-2 lg:mt-3 w-48 bg-white border border-gray-100 rounded-lg shadow-md z-50">
               <div class="py-1">
-                <a href="/ruangan" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Semua Ruangan</a>
-                <a href="/ruangan/tersedia" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Ruangan Tersedia</a>
-                <a href="/ruangan/kategori" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Kategori</a>
+                <a href="#" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Semua Ruangan</a>
+                <a href="#" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Ruangan Tersedia</a>
+                <a href="#" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Kategori</a>
               </div>
             </div>
           </li>
 
           <li>
-            <a href="/cara-memesan" class="inline-block px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg focus:outline-none">
+            <a href="#" class="inline-block px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg focus:outline-none">
               Informasi
             </a>
           </li>
@@ -46,9 +46,9 @@
     <!-- Right actions (auth) -->
     <div class="flex items-center gap-3 lg:col-span-3 ms-auto justify-end">
       <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <a href="/dashboard" class="hidden md:inline-flex items-center px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg">Dashboard</a>
-        <a href="/bookings/mine" class="hidden md:inline-flex items-center px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg">Reservasi Saya</a>
-        <a href="/logout" class="inline-flex items-center px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg bg-white hover:shadow-sm">Keluar</a>
+        <a href="#" class="hidden md:inline-flex items-center px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg">Dashboard</a>
+        <a href="#" class="hidden md:inline-flex items-center px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg">Reservasi Saya</a>
+        <a href="#" class="inline-flex items-center px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg bg-white hover:shadow-sm">Keluar</a>
       <% } else { %>
         <a href="/login" class="inline-flex items-center px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg bg-white text-[#1E293B] hover:shadow-sm">Masuk</a>
         <a href="/register" class="inline-flex items-center px-3 py-2 text-sm rounded-lg bg-[#001A9E] text-white hover:bg-[#0025C7]">Daftar</a>
@@ -73,13 +73,13 @@
           <svg class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="mobileRoomsMenu" class="pl-4 hidden">
-          <a href="/ruangan" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Semua Ruangan</a>
-          <a href="/ruangan/tersedia" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Ruangan Tersedia</a>
-          <a href="/ruangan/kategori" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Kategori</a>
+          <a href="#" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Semua Ruangan</a>
+          <a href="#" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Ruangan Tersedia</a>
+          <a href="#" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Kategori</a>
         </div>
       </div>
 
-      <a href="/cara-memesan" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Informasi</a>
+      <a href="#" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Informasi</a>
 
       <% if (typeof currentUser !== 'undefined' && currentUser) { %>
         <a href="/dashboard" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Dashboard</a>
