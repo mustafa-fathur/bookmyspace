@@ -1,14 +1,2 @@
-<%- include('../layouts/main', { body: `
-
-<section class="flex items-center justify-center min-h-[60vh] px-4">
-  <div class="text-center">
-    <h1 class="text-6xl font-bold text-gray-300 mb-4">${typeof error !== 'undefined' && error.status ? error.status : '500'}</h1>
-    <h2 class="text-2xl font-semibold text-gray-900 mb-3">${typeof title !== 'undefined' ? title : 'Error'}</h2>
-    <p class="text-gray-600 mb-8 max-w-md mx-auto">${typeof message !== 'undefined' ? message : 'Something went wrong.'}</p>
-    <a href="/" class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-700 transition-colors">
-      Go Home
-    </a>
-  </div>
-</section>
-
-` }) %>
+<%- include('../layouts/main', { body:
+  '\n\n<section class="flex items-center justify-center min-h-[60vh] px-4">\n  <div class="text-center">\n    <h1 class="text-6xl font-bold text-gray-300 mb-4">' + ((typeof error !== 'undefined' && error && error.status) ? error.status : '500') + '</h1>\n    <h2 class="text-2xl font-semibold text-gray-900 mb-3">' + (typeof title !== 'undefined' ? title : 'Kesalahan') + '</h2>\n    <p class="text-gray-600 mb-8 max-w-md mx-auto">' + (typeof message !== 'undefined' ? message : 'Terjadi kesalahan pada server.') + '</p>\n    <a href=\"/\" class=\"inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-700 transition-colors\">\n      Beranda\n    </a>\n  </div>\n</section>\n\n' }) %>

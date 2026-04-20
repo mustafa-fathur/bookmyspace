@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk — BookMySpace</title>
+  <link rel="icon" type="image/x-icon" href="/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="min-h-screen bg-white text-[#1E293B] font-sans antialiased">
+
+  <div class="min-h-screen flex items-center justify-center px-4 py-12 bg-white">
+    <div class="w-full max-w-md">
+
+      <!-- Error alert -->
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="mb-4 flex gap-3 items-start px-4 py-3 rounded-lg bg-red-50 border border-red-100">
+          <svg class="shrink-0 w-4 h-4 text-red-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.75a.75.75 0 10-1.5 0v4.5a.75.75 0 001.5 0v-4.5zm-.75 7.5a.875.875 0 110 1.75.875.875 0 010-1.75z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-sm text-red-700"><%= error %></p>
+        </div>
+      <% } %>
+
+      <!-- Card -->
+      <div class="bg-white border border-[#E2E8F0] rounded-xl shadow-sm">
+        <div class="p-6 sm:p-8">
+
+          <!-- Logo inside card -->
+          <div class="flex justify-center mb-6">
+            <a href="/" class="inline-flex items-center gap-2.5">
+              <img src="/images/logo.png" alt="BookMySpace" class="h-16 w-16 object-contain" onerror="this.style.display='none'">
+              <!-- <span class="font-semibold text-xl text-[#001A9E]">BookMySpace</span> -->
+            </a>
+          </div>
+
+          <!-- Heading -->
+          <div class="text-center">
+            <h1 class="block text-2xl font-bold text-[#1E293B]">Masuk</h1>
+            <p class="mt-2 text-sm text-gray-500">
+              Belum punya akun?
+              <a href="/register" class="text-[#001A9E] decoration-2 hover:underline focus:outline-none font-medium">
+                Daftar di sini
+              </a>
+            </p>
+          </div>
+
+          <div class="mt-6">
+
+            <!-- Google (placeholder) -->
+            <a href="#" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg bg-white border border-[#E2E8F0] text-[#1E293B] shadow-sm hover:bg-gray-50 focus:outline-none">
+              <svg class="w-4 h-auto" width="46" height="47" viewBox="0 0 46 47" fill="none">
+                <path d="M46 24.0287C46 22.09 45.8533 20.68 45.5013 19.2112H23.4694V27.9356H36.4069C36.1429 30.1094 34.7347 33.37 31.5957 35.5731L31.5663 35.8669L38.5191 41.2719L38.9885 41.3306C43.4477 37.2181 46 31.1669 46 24.0287Z" fill="#4285F4"/>
+                <path d="M23.4694 47C29.8061 47 35.1161 44.9144 39.0179 41.3012L31.625 35.5437C29.6301 36.9244 26.9898 37.8937 23.4987 37.8937C17.2793 37.8937 12.0281 33.7812 10.1505 28.1412L9.88649 28.1706L2.61097 33.7812L2.52296 34.0456C6.36608 41.7125 14.287 47 23.4694 47Z" fill="#34A853"/>
+                <path d="M10.1212 28.1413C9.62245 26.6725 9.32908 25.1156 9.32908 23.5C9.32908 21.8844 9.62245 20.3275 10.0918 18.8588V18.5356L2.75765 12.8369L2.52296 12.9544C0.909439 16.1269 0 19.7106 0 23.5C0 27.2894 0.909439 30.8731 2.49362 34.0456L10.1212 28.1413Z" fill="#FBBC05"/>
+                <path d="M23.4694 9.07688C27.8699 9.07688 30.8622 10.9863 32.5344 12.5725L39.1645 6.11C35.0867 2.32063 29.8061 0 23.4694 0C14.287 0 6.36607 5.2875 2.49362 12.9544L10.0918 18.8588C11.9987 13.1894 17.25 9.07688 23.4694 9.07688Z" fill="#EB4335"/>
+              </svg>
+              Masuk dengan Google
+            </a>
+
+            <!-- Divider -->
+            <div class="py-4 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-[#E2E8F0] before:me-6 after:flex-1 after:border-t after:border-[#E2E8F0] after:ms-6">
+              Atau
+            </div>
+
+            <!-- Form -->
+            <form action="/login" method="POST">
+              <div class="grid gap-y-4">
+
+                <!-- Email -->
+                <div>
+                  <label for="email" class="block text-sm mb-2 text-[#1E293B]">Alamat Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    autocomplete="email"
+                    placeholder="nama@kampus.ac.id"
+                    class="py-2.5 sm:py-3 px-4 block w-full bg-white border border-[#E2E8F0] rounded-lg sm:text-sm text-[#1E293B] placeholder:text-gray-400 focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                  >
+                </div>
+
+                <!-- Password -->
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label for="password" class="block text-sm text-[#1E293B]">Kata Sandi</label>
+                    <a href="/forgot-password" class="text-sm text-[#001A9E] hover:underline font-medium">
+                      Lupa kata sandi?
+                    </a>
+                  </div>
+                  <div class="relative">
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      required
+                      autocomplete="current-password"
+                      placeholder="Masukkan kata sandi"
+                      class="py-2.5 sm:py-3 px-4 block w-full bg-white border border-[#E2E8F0] rounded-lg sm:text-sm text-[#1E293B] placeholder:text-gray-400 focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none pr-24"
+                    >
+                    <button type="button" id="togglePwd" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-500 hover:text-[#001A9E] transition-colors">
+                      Tampilkan
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Remember me -->
+                <div class="flex items-center gap-3">
+                  <input
+                    id="remember"
+                    name="remember"
+                    type="checkbox"
+                    class="shrink-0 size-4 border border-[#E2E8F0] rounded text-[#001A9E] checked:bg-[#001A9E] checked:border-[#001A9E] focus:ring-0 focus:ring-offset-0"
+                  >
+                  <label for="remember" class="text-sm text-[#1E293B]">Ingat saya</label>
+                </div>
+
+                <!-- Submit -->
+                <button
+                  type="submit"
+                  class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg bg-[#001A9E] border border-[#001A9E] text-white hover:bg-[#0025C7] focus:outline-none focus:bg-[#0025C7] transition-colors disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  Masuk
+                </button>
+
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+      <!-- End Card -->
+
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('togglePwd');
+      var input = document.getElementById('password');
+      if (!btn || !input) return;
+      btn.addEventListener('click', function () {
+        var hidden = input.type === 'password';
+        input.type = hidden ? 'text' : 'password';
+        btn.textContent = hidden ? 'Sembunyikan' : 'Tampilkan';
+      });
+    })();
+  </script>
+  <script src="/js/preline.js"></script>
+</body>
+</html>

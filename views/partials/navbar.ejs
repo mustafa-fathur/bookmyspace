@@ -1,25 +1,169 @@
-<!-- Navbar -->
-<header class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
-  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-    <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors">
-      <img src="/images/logo.png" alt="BookMySpace Logo" class="h-8 w-auto object-contain">
-      BookMySpace
-    </a>
+<header class="flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full py-7 bg-white border-b border-[#E2E8F0]">
+  <nav class="relative max-w-7xl w-full flex flex-wrap lg:grid lg:grid-cols-12 basis-full items-center px-4 md:px-6 lg:px-8 mx-auto" aria-label="Main navigation">
+    <!-- Logo / Brand (left) -->
+    <div class="lg:col-span-3 flex items-center">
+      <a href="/" class="flex items-center gap-3 font-semibold text-xl text-[#001A9E] focus:outline-none" aria-label="BookMySpace">
+        <img src="/images/logo.png" alt="BookMySpace" class="w-9 h-9 object-contain rounded-md" onerror="this.style.display='none'">
+        <span class="leading-tight">BookMySpace</span>
+      </a>
+    </div>
 
-    <!-- Navigation Links -->
-    <div class="flex items-center gap-3">
+    <!-- Center menu (collapse target) -->
+    <div id="navbar-collapse" class="hidden lg:block lg:col-span-6">
+      <div class="flex justify-center">
+        <ul class="flex flex-col lg:flex-row items-center gap-1 lg:gap-6">
+          <li>
+            <a href="/" class="relative inline-block px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg focus:outline-none">
+              Beranda
+            </a>
+          </li>
+
+          <!-- Ruangan dropdown -->
+          <li class="relative">
+            <button id="roomsDropdownBtn" aria-haspopup="true" aria-expanded="false" class="inline-flex items-center gap-2 px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg focus:outline-none">
+              Ruangan
+              <svg class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+
+            <div id="roomsDropdownMenu" class="hidden absolute left-0 lg:left-auto lg:translate-x-0 top-full mt-2 lg:mt-3 w-48 bg-white border border-gray-100 rounded-lg shadow-md z-50">
+              <div class="py-1">
+                <a href="/ruangan" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Semua Ruangan</a>
+                <a href="/ruangan/tersedia" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Ruangan Tersedia</a>
+                <a href="/ruangan/kategori" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50">Kategori</a>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <a href="/cara-memesan" class="inline-block px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg focus:outline-none">
+              Informasi
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right actions (auth) -->
+    <div class="flex items-center gap-3 lg:col-span-3 ms-auto justify-end">
       <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Dashboard</a>
-        <a href="/logout" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-          Logout
-        </a>
+        <a href="/dashboard" class="hidden md:inline-flex items-center px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg">Dashboard</a>
+        <a href="/bookings/mine" class="hidden md:inline-flex items-center px-3 py-2 text-sm text-[#1E293B] hover:text-[#001A9E] rounded-lg">Reservasi Saya</a>
+        <a href="/logout" class="inline-flex items-center px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg bg-white hover:shadow-sm">Keluar</a>
       <% } else { %>
-        <a href="/login" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Login</a>
-        <a href="/register" class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors shadow-sm">
-          Register
-        </a>
+        <a href="/login" class="inline-flex items-center px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg bg-white text-[#1E293B] hover:shadow-sm">Masuk</a>
+        <a href="/register" class="inline-flex items-center px-3 py-2 text-sm rounded-lg bg-[#001A9E] text-white hover:bg-[#0025C7]">Daftar</a>
       <% } %>
+
+      <!-- Mobile collapse toggle -->
+      <button id="navbar-toggle" type="button" aria-controls="navbar-collapse" aria-expanded="false" class="lg:hidden inline-flex items-center justify-center p-2 rounded-md border border-[#E2E8F0] bg-white text-[#1E293B] focus:outline-none">
+        <svg id="icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile: duplicated collapse content for vertical layout -->
+  <div id="navbar-collapse-mobile" class="lg:hidden hidden border-t border-[#E2E8F0] bg-white">
+    <div class="max-w-7xl mx-auto px-4 py-4 space-y-2">
+      <a href="/" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Beranda</a>
+
+      <div>
+        <button type="button" id="mobileRoomsToggle" class="w-full text-left flex items-center justify-between px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">
+          <span>Ruangan</span>
+          <svg class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="mobileRoomsMenu" class="pl-4 hidden">
+          <a href="/ruangan" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Semua Ruangan</a>
+          <a href="/ruangan/tersedia" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Ruangan Tersedia</a>
+          <a href="/ruangan/kategori" class="block px-3 py-2 text-sm text-[#1E293B] hover:bg-gray-50 rounded-lg">Kategori</a>
+        </div>
+      </div>
+
+      <a href="/cara-memesan" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Informasi</a>
+
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <a href="/dashboard" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Dashboard</a>
+        <a href="/bookings/mine" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Reservasi Saya</a>
+        <a href="/logout" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Keluar</a>
+      <% } else { %>
+        <a href="/login" class="block rounded-lg px-3 py-2 text-sm font-medium text-[#1E293B] hover:bg-gray-50">Masuk</a>
+        <a href="/register" class="block rounded-lg px-3 py-2 text-sm font-medium text-white bg-[#001A9E] rounded hover:bg-[#0025C7]">Daftar</a>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    // Minimal JS fallback for collapse & dropdown interactions (works without Preline JS)
+    (function () {
+      // Collapse toggle for mobile
+      const toggle = document.getElementById('navbar-toggle');
+      const collapseMobile = document.getElementById('navbar-collapse-mobile');
+      const iconOpen = document.getElementById('icon-open');
+      const iconClose = document.getElementById('icon-close');
+
+      if (toggle && collapseMobile) {
+        toggle.addEventListener('click', function () {
+          const isHidden = collapseMobile.classList.contains('hidden');
+          collapseMobile.classList.toggle('hidden');
+          iconOpen.classList.toggle('hidden', !isHidden);
+          iconClose.classList.toggle('hidden', isHidden);
+          toggle.setAttribute('aria-expanded', String(!isHidden));
+        });
+      }
+
+      // Desktop dropdown: Ruangan
+      const roomsBtn = document.getElementById('roomsDropdownBtn');
+      const roomsMenu = document.getElementById('roomsDropdownMenu');
+      let roomsTimer = null;
+
+      if (roomsBtn && roomsMenu) {
+        const openMenu = () => {
+          if (roomsTimer) { clearTimeout(roomsTimer); roomsTimer = null; }
+          roomsMenu.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+          roomsMenu.classList.add('block', 'opacity-100');
+          roomsBtn.setAttribute('aria-expanded', 'true');
+        };
+        const closeMenu = (delay = 180) => {
+          if (roomsTimer) clearTimeout(roomsTimer);
+          roomsTimer = setTimeout(() => {
+            roomsMenu.classList.add('hidden');
+            roomsMenu.classList.remove('block', 'opacity-100');
+            roomsBtn.setAttribute('aria-expanded', 'false');
+            roomsTimer = null;
+          }, delay);
+        };
+
+        // Hover behavior for desktop
+        roomsBtn.addEventListener('mouseenter', openMenu);
+        roomsBtn.addEventListener('mouseleave', () => closeMenu(250));
+        roomsMenu.addEventListener('mouseenter', openMenu);
+        roomsMenu.addEventListener('mouseleave', () => closeMenu(250));
+
+        // Click toggling (accessibility)
+        roomsBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const expanded = roomsBtn.getAttribute('aria-expanded') === 'true';
+          if (expanded) closeMenu(0); else openMenu();
+        });
+      }
+
+      // Mobile rooms toggle
+      const mobileRoomsToggle = document.getElementById('mobileRoomsToggle');
+      const mobileRoomsMenu = document.getElementById('mobileRoomsMenu');
+      if (mobileRoomsToggle && mobileRoomsMenu) {
+        mobileRoomsToggle.addEventListener('click', function () {
+          mobileRoomsMenu.classList.toggle('hidden');
+        });
+      }
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function (e) {
+        if (roomsMenu && roomsBtn && !roomsMenu.contains(e.target) && !roomsBtn.contains(e.target)) {
+          roomsMenu.classList.add('hidden');
+          roomsBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+    })();
+  </script>
 </header>

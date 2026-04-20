@@ -3,27 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BookMySpace — Sistem pemesanan ruangan universitas modern. Pesan ruangan dengan mudah, pantau ketersediaan, dan kelola pemesanan Anda.">
+  <meta name="description" content="BookMySpace — Sistem pemesanan ruangan universitas modern.">
   <title><%= typeof title !== 'undefined' ? title : 'BookMySpace' %></title>
-  <link rel="icon" type="image/x-icon" href="images/logo.png">
+  <link rel="icon" type="image/x-icon" href="/images/logo.png">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Compiled Tailwind CSS -->
   <link rel="stylesheet" href="/css/output.css">
 </head>
-<body class="min-h-screen flex flex-col bg-white text-[#1E293B] font-sans antialiased">
-
-  <%- include('../partials/navbar') %>
-
-  <main class="flex-1">
-    <%- body %>
-  </main>
-
-  <%- include('../partials/footer') %>
-  <script src="/js/preline.js"></script>
+<body class="min-h-screen bg-white text-[#1E293B] font-sans antialiased">
+  <%- body %>
+  <script src="./node_modules/preline/dist/preline.js"></script>
 </body>
 </html>

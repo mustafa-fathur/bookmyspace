@@ -1,17 +1,11 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary-50: #eefbff;
-  --color-primary-100: #dcf4ff;
-  --color-primary-200: #bceaff;
-  --color-primary-300: #90dfff;
-  --color-primary-400: #a3e4fa; 
-  --color-primary-500: #5796f2;
-  --color-primary-600: #2e6beb; 
-  --color-primary-700: #174edb;
-  --color-primary-800: #0a2d9a;
-  --color-primary-900: #000b8c; 
-  --color-primary-950: #00086b;
+/* Preline UI - ensure relative paths point to the project's node_modules from public/css */
+@source "../../node_modules/preline/dist/*.js";
+@import "../../node_modules/preline/variants.css";
 
-  --font-sans: 'Inter', system-ui, sans-serif;
-}
+/* Plugins (tailwind plugin directive) */
+@plugin "@tailwindcss/forms";
+
+/* Preline Themes - expects a themes directory inside public (../themes/theme.css -> public/themes/theme.css) */
+@import "../themes/theme.css";
