@@ -23,10 +23,14 @@ const pageController = {
         if (req.session && req.session.user) {
             return res.redirect("/dashboard");
         }
+        const error = req.session.loginError || null;
+        if (req.session.loginError) {
+            delete req.session.loginError;
+        }
         res.render("pages/login", {
             title: "Masuk — BookMySpace",
             currentUser: null,
-            error: req.session.loginError || null,
+            error: error,
         });
     },
 

@@ -17,12 +17,35 @@
 
       <!-- Error alert -->
       <% if (typeof error !== 'undefined' && error) { %>
-        <div class="mb-4 flex gap-3 items-start px-4 py-3 rounded-lg bg-red-50 border border-red-100">
-          <svg class="shrink-0 w-4 h-4 text-red-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.75a.75.75 0 10-1.5 0v4.5a.75.75 0 001.5 0v-4.5zm-.75 7.5a.875.875 0 110 1.75.875.875 0 010-1.75z" clip-rule="evenodd"/>
-          </svg>
-          <p class="text-sm text-red-700"><%= error %></p>
+        <!-- Toast -->
+        <div id="error-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 max-w-xs w-full p-4 bg-white border border-gray-200 rounded-xl shadow-lg transition-all duration-300 transform opacity-100 translate-y-0" role="alert" tabindex="-1" aria-labelledby="hs-toast-error-example-label">
+          <div class="flex gap-x-3">
+            <svg class="shrink-0 size-4 text-red-500 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+            </svg>
+            <div class="grow">
+              <p id="hs-toast-error-example-label" class="text-sm text-gray-800">
+                <%= error %>
+              </p>
+            </div>
+            <button type="button" class="shrink-0 size-4 flex justify-center items-center rounded-lg text-gray-500 hover:text-gray-800 focus:outline-none focus:text-gray-800" aria-label="Close" onclick="document.getElementById('error-toast').remove()">
+              <span class="sr-only">Close</span>
+              <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
         </div>
+        <!-- End Toast -->
+        <script>
+          // Auto-dismiss the toast after 5 seconds
+          setTimeout(() => {
+            const toast = document.getElementById('error-toast');
+            if (toast) {
+              toast.classList.remove('opacity-100', 'translate-y-0');
+              toast.classList.add('opacity-0', '-translate-y-5');
+              setTimeout(() => toast.remove(), 300); // Wait for transition before removing from DOM
+            }
+          }, 5000);
+        </script>
       <% } %>
 
       <!-- Card -->
