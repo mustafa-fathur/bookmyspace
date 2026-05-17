@@ -3,4 +3,6 @@ node_modules
 uploads/*
 !uploads/.gitkeep
 !uploads/borrow-letters/.gitkeep
+public/uploads/profile-avatars/*
+!public/uploads/profile-avatars/.gitkeep
 public/css/output.css

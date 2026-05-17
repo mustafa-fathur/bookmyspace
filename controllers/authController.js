@@ -92,7 +92,8 @@ const authController = {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                avatar_url: user.avatar_url
             };
 
             delete req.session.loginError;
