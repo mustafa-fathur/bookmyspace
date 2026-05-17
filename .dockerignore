@@ -4,6 +4,6 @@ node_modules
 .env
 uploads/borrow-letters/*
 !uploads/borrow-letters/.gitkeep
-public/uploads/profile-avatars/*
-!public/uploads/profile-avatars/.gitkeep
+uploads/profile-avatars/*
+!uploads/profile-avatars/.gitkeep
 *.md

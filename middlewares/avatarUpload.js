@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
-const { AVATAR_PUBLIC_DIR } = require("../utils/profileAvatar");
+const { AVATAR_STORAGE_DIR } = require("../utils/profileAvatar");
 
 const allowedMimeTypes = new Set([
     "image/jpeg",
@@ -15,13 +15,13 @@ const extensionByMimeType = {
     "image/webp": ".webp",
 };
 
-if (!fs.existsSync(AVATAR_PUBLIC_DIR)) {
-    fs.mkdirSync(AVATAR_PUBLIC_DIR, { recursive: true });
+if (!fs.existsSync(AVATAR_STORAGE_DIR)) {
+    fs.mkdirSync(AVATAR_STORAGE_DIR, { recursive: true });
 }
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, AVATAR_PUBLIC_DIR);
+        cb(null, AVATAR_STORAGE_DIR);
     },
     filename: (req, file, cb) => {
         const userId = req.session && req.session.user ? req.session.user.id : "guest";

@@ -17,6 +17,7 @@ router.post("/register", authController.register);
 router.get("/logout", authController.logout);
 
 // ─── User Pages ──────────────────────────────────────────
+router.get("/uploads/profile-avatars/:filename", pageController.serveAvatar);
 router.get("/profile", requiresAuth, pageController.profilePage);
 router.post("/profile", requiresAuth, pageController.updateProfile);
 router.post("/profile/avatar", requiresAuth, avatarUpload, pageController.updateAvatar);

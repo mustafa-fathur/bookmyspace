@@ -5,7 +5,11 @@
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 const { User } = require("../models");
-const { deleteProfileAvatar } = require("../utils/profileAvatar");
+const {
+    AVATAR_URL_PREFIX,
+    deleteProfileAvatar,
+    getProfileAvatarPath,
+} = require("../utils/profileAvatar");
 
 const consumeSessionValue = (req, key) => {
     const value = req.session[key] || null;
@@ -248,7 +252,7 @@ const pageController = {
             }
 
             const oldAvatarUrl = user.avatar_url;
-            const avatarUrl = `/uploads/profile-avatars/${req.file.filename}`;
+            const avatarUrl = `${AVATAR_URL_PREFIX}${req.file.filename}`;
 
             await user.update({ avatar_url: avatarUrl });
             deleteProfileAvatar(oldAvatarUrl);
@@ -292,6 +296,38 @@ const pageController = {
         } catch (error) {
             next(error);
         }
+    },
+
+    /**
+     * GET /uploads/profile-avatars/:filename
+     * Serves profile photos from private upload storage.
+     */
+    serveAvatar: (req, res, next) => {
+        const filePath = getProfileAvatarPath(req.params.filename);
+
+        if (!filePath) {
+            return res.status(404).render("pages/error", {
+                title: "Tidak Ditemukan",
+                message: "Foto profil tidak ditemukan.",
+            });
+        }
+
+        res.sendFile(filePath, {
+            headers: {
+                "Cache-Control": "public, max-age=86400",
+            },
+        }, (error) => {
+            if (!error) return;
+
+            if (error.code === "ENOENT") {
+                return res.status(404).render("pages/error", {
+                    title: "Tidak Ditemukan",
+                    message: "Foto profil tidak ditemukan.",
+                });
+            }
+
+            next(error);
+        });
     },
 };
 
