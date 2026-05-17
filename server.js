@@ -9,7 +9,7 @@ const routes = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const shouldBypassDb = ["1", "true", "yes"].includes(
     String(process.env.BYPASS_DB_CONNECTION || 1).toLowerCase(),
 );
