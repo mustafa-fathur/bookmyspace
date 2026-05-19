@@ -1,0 +1,345 @@
+<%
+  const escapeHtml = (value) => String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+  const profileValue = (key) => profileOld && Object.prototype.hasOwnProperty.call(profileOld, key)
+    ? profileOld[key]
+    : user[key];
+
+  const currentGender = profileOld && Object.prototype.hasOwnProperty.call(profileOld, 'gender')
+    ? profileOld.gender
+    : (user.gender === true ? 'male' : (user.gender === false ? 'female' : ''));
+
+  const genderLabel = currentGender === 'male'
+    ? 'Laki-laki'
+    : (currentGender === 'female' ? 'Perempuan' : 'Belum diisi');
+  const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+  const avatarUrl = user.avatar_url || '';
+
+  const avatarPreview = avatarUrl
+    ? `<img src="${escapeHtml(avatarUrl)}" alt="Foto profil ${escapeHtml(user.name)}" class="size-32 rounded-full object-cover border border-[#E2E8F0] bg-white">`
+    : `<div class="size-32 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] text-[#001A9E] inline-flex items-center justify-center text-4xl font-bold">${escapeHtml(initial)}</div>`;
+
+  const renderAlert = (type, messages) => {
+    if (!messages || !messages.length) return '';
+    const styles = type === 'success'
+      ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+      : 'border-red-200 bg-red-50 text-red-700';
+    const list = Array.isArray(messages) ? messages : [messages];
+
+    return `
+      <div class="rounded-lg border ${styles} px-4 py-3 text-sm">
+        ${list.length === 1
+          ? `<p>${escapeHtml(list[0])}</p>`
+          : `<ul class="space-y-1">${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`}
+      </div>
+    `;
+  };
+
+  const avatarDeleteButton = avatarUrl
+    ? `
+      <button
+        type="button"
+        id="open-avatar-delete-modal"
+        class="text-sm font-semibold text-red-600 hover:text-red-700"
+      >
+        Hapus foto
+      </button>
+    `
+    : '';
+
+  const avatarDeleteModal = avatarUrl
+    ? `
+      <div id="avatar-delete-modal" class="fixed inset-0 z-[80] hidden" aria-labelledby="avatar-delete-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-[#0F172A]/40"></div>
+        <div class="relative min-h-screen px-4 py-6 flex items-center justify-center">
+          <div class="w-full max-w-md rounded-xl border border-[#E2E8F0] bg-white shadow-xl">
+            <div class="p-6">
+              <div class="size-11 rounded-full bg-red-50 text-red-600 inline-flex items-center justify-center">
+                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"/>
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/>
+                  <path d="M14 11v6"/>
+                </svg>
+              </div>
+              <h2 id="avatar-delete-title" class="mt-4 text-lg font-bold text-[#1E293B]">Hapus foto profil?</h2>
+              <p class="mt-2 text-sm text-gray-500">Foto profil saat ini akan dihapus dari akun Anda. Anda bisa mengunggah foto baru kapan saja.</p>
+
+              <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+                <button type="button" id="close-avatar-delete-modal" class="inline-flex items-center justify-center rounded-lg border border-[#CBD5E1] bg-white px-4 py-2.5 text-sm font-semibold text-[#1E293B] hover:bg-gray-50">
+                  Batal
+                </button>
+                <form action="/profile/avatar/delete" method="POST">
+                  <button type="submit" class="w-full inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700">
+                    Hapus Foto
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+    : '';
+%>
+
+<%- include('../layouts/main', { body: `
+
+<section class="bg-[#F8FAFC]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
+    <div class="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="text-sm font-semibold text-[#001A9E]">Akun</p>
+        <h1 class="mt-1 text-3xl font-bold tracking-normal text-[#1E293B]">Profil Saya</h1>
+        <p class="mt-2 text-sm text-gray-500">Perbarui identitas, foto profil, dan password akun BookMySpace.</p>
+      </div>
+      <a href="/" class="inline-flex w-fit items-center justify-center rounded-lg border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#1E293B] hover:bg-gray-50">
+        Kembali ke Beranda
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-6 items-start">
+      <aside id="profile-photo" class="rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+        <div class="p-6">
+          <div class="flex flex-col items-center text-center">
+            <form id="avatar-upload-form" action="/profile/avatar" method="POST" enctype="multipart/form-data" class="w-full">
+              <div class="relative mx-auto w-fit">
+                ${avatarPreview}
+                <label for="avatar" class="absolute bottom-1 right-1 size-10 rounded-full bg-[#001A9E] text-white inline-flex items-center justify-center shadow-sm cursor-pointer hover:bg-[#0025C7]" title="Pilih foto profil">
+                  <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/>
+                    <circle cx="12" cy="13" r="3"/>
+                  </svg>
+                </label>
+              </div>
+
+              <h2 class="mt-5 text-xl font-bold text-[#1E293B]">${escapeHtml(user.name)}</h2>
+              <p class="mt-1 text-sm text-gray-500 break-all">${escapeHtml(user.email)}</p>
+
+              <input
+                type="file"
+                id="avatar"
+                name="avatar"
+                accept="image/jpeg,image/png,image/webp"
+                class="sr-only"
+              >
+
+              <p id="avatar-upload-hint" class="mt-5 min-h-5 text-xs text-gray-500">Klik ikon kamera untuk mengunggah JPG, PNG, atau WebP maksimal 2MB.</p>
+            </form>
+
+            <div class="mt-3 min-h-6">
+              ${avatarDeleteButton}
+            </div>
+
+            <div class="mt-5 w-full space-y-3 border-t border-[#E2E8F0] pt-5 text-left">
+              ${renderAlert('error', avatarErrors)}
+              ${renderAlert('success', avatarStatus)}
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Nomor Telepon</p>
+                <p class="mt-1 text-sm font-medium text-[#1E293B]">${escapeHtml(user.phone_number || 'Belum diisi')}</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Jenis Kelamin</p>
+                <p class="mt-1 text-sm font-medium text-[#1E293B]">${escapeHtml(genderLabel)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="space-y-6">
+        <section id="profile-information" class="rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+          <div class="border-b border-[#E2E8F0] px-6 py-5">
+            <h2 class="text-lg font-bold text-[#1E293B]">Informasi Profil</h2>
+            <p class="mt-1 text-sm text-gray-500">Data ini akan digunakan saat Anda mengajukan peminjaman ruangan.</p>
+          </div>
+
+          <form action="/profile" method="POST" class="p-6">
+            <div class="space-y-4">
+              ${renderAlert('error', profileErrors)}
+              ${renderAlert('success', profileStatus)}
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="name" class="block text-sm font-semibold text-[#1E293B] mb-2">Nama Lengkap</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value="${escapeHtml(profileValue('name'))}"
+                  required
+                  autocomplete="name"
+                  class="py-3 px-4 block w-full bg-white border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label for="email" class="block text-sm font-semibold text-[#1E293B] mb-2">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value="${escapeHtml(profileValue('email'))}"
+                  required
+                  autocomplete="email"
+                  class="py-3 px-4 block w-full bg-white border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label for="phone_number" class="block text-sm font-semibold text-[#1E293B] mb-2">Nomor Telepon</label>
+                <input
+                  type="tel"
+                  id="phone_number"
+                  name="phone_number"
+                  value="${escapeHtml(profileValue('phone_number'))}"
+                  autocomplete="tel"
+                  placeholder="Contoh: 081234567890"
+                  class="py-3 px-4 block w-full bg-white border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] placeholder:text-gray-400 focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label for="gender" class="block text-sm font-semibold text-[#1E293B] mb-2">Jenis Kelamin</label>
+                <select
+                  id="gender"
+                  name="gender"
+                  class="py-3 px-4 block w-full bg-white border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                >
+                  <option value="" ${currentGender === '' ? 'selected' : ''}>Belum diisi</option>
+                  <option value="male" ${currentGender === 'male' ? 'selected' : ''}>Laki-laki</option>
+                  <option value="female" ${currentGender === 'female' ? 'selected' : ''}>Perempuan</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-[#001A9E] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0025C7] focus:outline-none">
+                Simpan Perubahan
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section id="update-password" class="rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+          <div class="border-b border-[#E2E8F0] px-6 py-5">
+            <h2 class="text-lg font-bold text-[#1E293B]">Ubah Password</h2>
+            <p class="mt-1 text-sm text-gray-500">Pastikan password baru kuat dan belum pernah digunakan di layanan lain.</p>
+          </div>
+
+          <form action="/profile/password" method="POST" class="p-6">
+            <div class="space-y-4">
+              ${renderAlert('error', passwordErrors)}
+              ${renderAlert('success', passwordStatus)}
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div>
+                <label for="current_password" class="block text-sm font-semibold text-[#1E293B] mb-2">Password Saat Ini</label>
+                <input
+                  type="password"
+                  id="current_password"
+                  name="current_password"
+                  required
+                  autocomplete="current-password"
+                  class="py-3 px-4 block w-full bg-white border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label for="password" class="block text-sm font-semibold text-[#1E293B] mb-2">Password Baru</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  autocomplete="new-password"
+                  placeholder="Min. 8 karakter"
+                  class="py-3 px-4 block w-full bg-white border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] placeholder:text-gray-400 focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label for="password_confirmation" class="block text-sm font-semibold text-[#1E293B] mb-2">Konfirmasi Password</label>
+                <input
+                  type="password"
+                  id="password_confirmation"
+                  name="password_confirmation"
+                  required
+                  autocomplete="new-password"
+                  placeholder="Ulangi password"
+                  class="py-3 px-4 block w-full bg-white border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] placeholder:text-gray-400 focus:border-[#001A9E] focus:ring-1 focus:ring-[#001A9E] focus:outline-none"
+                >
+              </div>
+            </div>
+
+            <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+              <button type="reset" class="inline-flex items-center justify-center rounded-lg border border-[#CBD5E1] bg-white px-5 py-2.5 text-sm font-semibold text-[#1E293B] hover:bg-gray-50 focus:outline-none">
+                Reset
+              </button>
+              <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-[#001A9E] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0025C7] focus:outline-none">
+                Ubah Password
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+${avatarDeleteModal}
+
+<script>
+  (function () {
+    const avatarForm = document.getElementById('avatar-upload-form');
+    const avatarInput = document.getElementById('avatar');
+    const avatarUploadHint = document.getElementById('avatar-upload-hint');
+    const deleteModal = document.getElementById('avatar-delete-modal');
+    const openDeleteModal = document.getElementById('open-avatar-delete-modal');
+    const closeDeleteModal = document.getElementById('close-avatar-delete-modal');
+
+    if (avatarInput && avatarForm && avatarUploadHint) {
+      avatarInput.addEventListener('change', function () {
+        const file = avatarInput.files && avatarInput.files[0];
+        if (!file) return;
+
+        avatarUploadHint.textContent = 'Mengunggah ' + file.name + '...';
+        avatarForm.submit();
+      });
+    }
+
+    if (deleteModal && openDeleteModal && closeDeleteModal) {
+      const openModal = () => {
+        deleteModal.classList.remove('hidden');
+        closeDeleteModal.focus();
+      };
+      const closeModal = () => {
+        deleteModal.classList.add('hidden');
+        openDeleteModal.focus();
+      };
+
+      openDeleteModal.addEventListener('click', openModal);
+      closeDeleteModal.addEventListener('click', closeModal);
+      deleteModal.addEventListener('click', function (event) {
+        if (event.target === deleteModal || event.target === deleteModal.firstElementChild) {
+          closeModal();
+        }
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !deleteModal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    }
+  })();
+</script>
+
+` }) %>
