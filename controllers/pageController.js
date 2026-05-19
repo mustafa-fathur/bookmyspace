@@ -6,10 +6,17 @@ const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 const { User } = require("../models");
 const {
-    AVATAR_URL_PREFIX,
-    deleteProfileAvatar,
-    getProfileAvatarPath,
+    createProfileAvatarFilename,
+    getProfileAvatarFilenameFromUrl,
+    getProfileAvatarObjectName,
+    getProfileAvatarUrl,
+    isProfileAvatarFilename,
 } = require("../utils/profileAvatar");
+const {
+    deleteObject,
+    getSignedReadUrl,
+    uploadBuffer,
+} = require("../services/gcsStorage.service");
 
 const consumeSessionValue = (req, key) => {
     const value = req.session[key] || null;
@@ -238,6 +245,8 @@ const pageController = {
      * Updates the logged-in user's profile photo.
      */
     updateAvatar: async (req, res, next) => {
+        let uploadedObjectName = null;
+
         try {
             if (!req.file) {
                 req.session.avatarErrors = ["Pilih foto profil terlebih dahulu."];
@@ -251,11 +260,25 @@ const pageController = {
                 });
             }
 
-            const oldAvatarUrl = user.avatar_url;
-            const avatarUrl = `${AVATAR_URL_PREFIX}${req.file.filename}`;
+            const filename = createProfileAvatarFilename(user.id, req.file.mimetype);
+            const objectName = getProfileAvatarObjectName(filename);
+            const oldAvatarFilename = getProfileAvatarFilenameFromUrl(user.avatar_url);
+            const oldAvatarObjectName = getProfileAvatarObjectName(oldAvatarFilename);
 
+            await uploadBuffer({
+                objectName,
+                buffer: req.file.buffer,
+                contentType: req.file.mimetype,
+            });
+            uploadedObjectName = objectName;
+
+            const avatarUrl = getProfileAvatarUrl(filename);
             await user.update({ avatar_url: avatarUrl });
-            deleteProfileAvatar(oldAvatarUrl);
+            uploadedObjectName = null;
+
+            deleteObject(oldAvatarObjectName).catch((error) => {
+                console.error("Gagal menghapus avatar lama dari GCS:", error.message);
+            });
 
             req.session.user = {
                 ...req.session.user,
@@ -265,6 +288,27 @@ const pageController = {
 
             res.redirect("/profile#profile-photo");
         } catch (error) {
+            if (uploadedObjectName) {
+                deleteObject(uploadedObjectName).catch((deleteError) => {
+                    console.error("Gagal rollback avatar baru di GCS:", deleteError.message);
+                });
+            }
+
+            const errorMessage = error.message || "Terjadi kesalahan pada Cloud Storage.";
+
+            if (
+                error.code === "GCS_CONFIG_MISSING" ||
+                errorMessage === "Cannot call write after a stream was destroyed" ||
+                errorMessage.includes("Could not load the default credentials") ||
+                errorMessage.includes("invalid_grant") ||
+                errorMessage.includes("No such object")
+            ) {
+                req.session.avatarErrors = [
+                    `Upload ke Cloud Storage gagal: ${errorMessage}`,
+                ];
+                return res.redirect("/profile#profile-photo");
+            }
+
             next(error);
         }
     },
@@ -282,9 +326,14 @@ const pageController = {
                 });
             }
 
-            const oldAvatarUrl = user.avatar_url;
+            const oldAvatarFilename = getProfileAvatarFilenameFromUrl(user.avatar_url);
+            const oldAvatarObjectName = getProfileAvatarObjectName(oldAvatarFilename);
+
             await user.update({ avatar_url: null });
-            deleteProfileAvatar(oldAvatarUrl);
+
+            deleteObject(oldAvatarObjectName).catch((error) => {
+                console.error("Gagal menghapus avatar dari GCS:", error.message);
+            });
 
             req.session.user = {
                 ...req.session.user,
@@ -300,34 +349,38 @@ const pageController = {
 
     /**
      * GET /uploads/profile-avatars/:filename
-     * Serves profile photos from private upload storage.
+     * Redirects profile photos to a short-lived Cloud Storage signed URL.
      */
-    serveAvatar: (req, res, next) => {
-        const filePath = getProfileAvatarPath(req.params.filename);
-
-        if (!filePath) {
-            return res.status(404).render("pages/error", {
-                title: "Tidak Ditemukan",
-                message: "Foto profil tidak ditemukan.",
-            });
-        }
-
-        res.sendFile(filePath, {
-            headers: {
-                "Cache-Control": "public, max-age=86400",
-            },
-        }, (error) => {
-            if (!error) return;
-
-            if (error.code === "ENOENT") {
+    serveAvatar: async (req, res, next) => {
+        try {
+            if (!isProfileAvatarFilename(req.params.filename)) {
                 return res.status(404).render("pages/error", {
                     title: "Tidak Ditemukan",
                     message: "Foto profil tidak ditemukan.",
                 });
             }
 
+            const objectName = getProfileAvatarObjectName(req.params.filename);
+            const signedUrl = await getSignedReadUrl(objectName);
+
+            res.redirect(signedUrl);
+        } catch (error) {
+            if (error.code === 404) {
+                return res.status(404).render("pages/error", {
+                    title: "Tidak Ditemukan",
+                    message: "Foto profil tidak ditemukan.",
+                });
+            }
+
+            if (error.code === "GCS_CONFIG_MISSING") {
+                return res.status(500).render("pages/error", {
+                    title: "Konfigurasi Cloud Storage Belum Lengkap",
+                    message: error.message,
+                });
+            }
+
             next(error);
-        });
+        }
     },
 };
 
